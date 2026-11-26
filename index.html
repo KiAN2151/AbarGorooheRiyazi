@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>نظم پنهان در دل بی‌نهایت | نمایشگاه سه‌بعدی تعاملی</title>
+  <meta name="description" content="مدل سه‌بعدی تعاملی و نقشه مهندسی روزنامه دیواری علمی: فرکتال، نظریه آشوب (اثر پروانه‌ای) و مفهوم بی‌نهایت" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #070c18;
+      --panel-bg: rgba(11, 18, 34, 0.84);
+      --panel-border: rgba(212, 175, 55, 0.28);
+      --gold: #f0c75e;
+      --gold-dim: #b88f2d;
+      --cyan: #38bdf8;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 20%, #13203d 0%, #070c18 75%);
+      color: var(--text-main);
+      font-family: 'Vazirmatn', system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    #canvas-container:active { cursor: grabbing; }
+
+    /* Top Header */
+    .top-bar {
+      position: fixed;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .brand-badge {
+      pointer-events: auto;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 10px 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(240,199,94,0.22), rgba(56,189,248,0.18));
+      border: 1px solid rgba(240,199,94,0.45);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1.3;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .top-actions {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--panel-bg);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 8px 13px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+    .btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-1px);
+    }
+    .btn.active {
+      background: linear-gradient(135deg, rgba(240, 199, 94, 0.25), rgba(184, 143, 45, 0.22));
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .btn-cyan {
+      border-color: rgba(56, 189, 248, 0.45);
+      color: #bae6fd;
+    }
+    .btn-cyan:hover, .btn-cyan.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    /* Side Panel (Left side in RTL) */
+    .side-panel {
+      position: fixed;
+      top: 80px;
+      left: 16px;
+      width: 288px;
+      max-height: calc(100vh - 155px);
+      overflow-y: auto;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 18px;
+      padding: 15px;
+      z-index: 20;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+    }
+    .side-panel.collapsed {
+      transform: translateX(-330px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .side-panel::-webkit-scrollbar { width: 5px; }
+    .side-panel::-webkit-scrollbar-thumb { background: rgba(240,199,94,0.3); border-radius: 99px; }
+
+    .panel-section {
+      padding-bottom: 13px;
+      margin-bottom: 13px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .panel-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .section-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .slider-label strong { color: var(--text-main); }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+    .mini-btn {
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 8px 9px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: center;
+    }
+    .mini-btn:hover {
+      border-color: var(--gold);
+      background: rgba(240, 199, 94, 0.15);
+      color: var(--gold);
+    }
+
+    .stl-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .stl-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      padding: 8px 10px;
+      border-radius: 11px;
+    }
+    .stl-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stl-name { font-size: 12px; font-weight: 700; color: var(--text-main); }
+    .stl-dim { font-size: 10.5px; color: var(--text-muted); direction: ltr; text-align: right; }
+    .stl-dl {
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f0c75e, #c99728);
+      color: #0b1120;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 9px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .stl-dl:hover { filter: brightness(1.1); transform: scale(1.03); }
+
+    .info-card {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.26);
+      border-radius: 11px;
+      padding: 9px 11px;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+    .info-card b { color: var(--gold); }
+
+    /* Bottom Camera Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 7px 10px;
+      border-radius: 16px;
+      z-index: 20;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      max-width: calc(100vw - 24px);
+      overflow-x: auto;
+    }
+    .bottom-bar::-webkit-scrollbar { height: 0; }
+
+    .cam-btn {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 6px 11px;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .cam-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.06); }
+    .cam-btn.active {
+      color: #0b1120;
+      background: linear-gradient(135deg, #f0c75e, #d4a02e);
+      font-weight: 800;
+    }
+
+    /* Interactive Toast */
+    #toast {
+      position: fixed;
+      top: 78px;
+      right: 16px;
+      max-width: 320px;
+      background: rgba(10, 17, 32, 0.94);
+      border: 1px solid var(--gold);
+      color: var(--text-main);
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-size: 12.5px;
+      line-height: 1.7;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      z-index: 30;
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: all 0.28s ease;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* Loading Overlay */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #070c18;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 100;
+      transition: opacity 0.45s ease;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(240, 199, 94, 0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+      .brand-sub { display: none; }
+      .brand-title { font-size: 13px; }
+      .brand-badge { padding: 8px 11px; }
+      .btn { padding: 7px 10px; font-size: 11.5px; }
+      .side-panel {
+        top: auto;
+        bottom: 68px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-height: 52vh;
+      }
+      .side-panel.collapsed {
+        transform: translateY(120%);
+      }
+      #toast {
+        top: 68px;
+        left: 12px;
+        right: 12px;
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <div class="spinner"></div>
+    <div style="font-size:14px; color:#f0c75e; font-weight:700;">در حال ساخت مدل سه‌بعدی نمایشگاه...</div>
+  </div>
+
+  <div id="canvas-container"></div>
+
+  <!-- Top Navigation -->
+  <div class="top-bar">
+    <div class="brand-badge">
+      <div class="brand-icon">🦋</div>
+      <div>
+        <div class="brand-title">نظم پنهان در دل بی‌نهایت</div>
+        <div class="brand-sub">نقشه سه‌بعدی تعاملی و فایل‌های پرینت سه‌بعدی روزنامه دیواری</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn btn-cyan" id="btn-blueprint" title="نمایش اندازه‌های دقیق مهندسی">📐 نقشه فنی</button>
+      <button class="btn" id="btn-nudge" title="تست اثر پروانه‌ای">🦋 تست آونگ</button>
+      <button class="btn active" id="btn-toggle-panel">⚙️ کنترل‌ها و STL</button>
+    </div>
+  </div>
+
+  <!-- Interactive Toast -->
+  <div id="toast"></div>
+
+  <!-- Side Controls & STL Exporter -->
+  <aside class="side-panel" id="side-panel">
+    <div class="panel-section">
+      <div class="section-title">
+        <span>📏 زاویه تاشدن فوم‌بورد</span>
+        <span id="fold-val" style="color:#38bdf8; font-size:12px;">20°</span>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>تخت (دیواری)</span>
+          <span>رومیزی (سه‌لت)</span>
+        </div>
+        <input type="range" id="fold-slider" min="0" max="38" value="20" step="1" />
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">🎮 بخش‌های تعاملی</div>
+      <div class="action-grid">
+        <button class="mini-btn" id="btn-pendulum-reset">🦋 رهاسازی با ۰.۰۱° تغییر</button>
+        <button class="mini-btn" id="btn-doors-all">🚪 باز/بسته هتل هیلبرت</button>
+      </div>
+      <div style="margin-top:8px; font-size:11px; color:var(--text-muted); line-height:1.6;">
+        💡 روی <b>آونگ دوگانه</b> یا هر کدوم از <b>درهای هتل هیلبرت</b> توی صحنه سه‌بعدی کلیک کن!
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">
+        <span>🖨️ دانلود فایل‌های STL</span>
+        <span style="font-size:10.5px; color:#94a3b8;">مقیاس واقعی (mm)</span>
+      </div>
+      <div class="stl-list">
+        <div class="stl-item">
+          <div class="stl-info">
+            <span class="stl-name">۱. هرم سرپینسکی</span>
+            <span class="stl-dim">124 × 124 × 96 mm</span>
+          </div>
+          <button class="stl-dl" data-stl="sierpinski">دانلود STL</button>
+        </div>
+        <div class="stl-item">
+          <div class="stl-info">
+            <span class="stl-name">۲. جاذب لورنز (پروانه)</span>
+            <span class="stl-dim">148 × 98 × 32 mm</span>
+          </div>
+          <button class="stl-dl" data-stl="lorenz">دانلود STL</button>
+        </div>
+        <div class="stl-item">
+          <div class="stl-info">
+            <span class="stl-name">۳. بازوهای آونگ (بلبرینگ 608)</span>
+            <span class="stl-dim">143 mm + 130 mm</span>
+          </div>
+          <button class="stl-dl" data-stl="pendulum">دانلود STL</button>
+        </div>
+        <div class="stl-item">
+          <div class="stl-info">
+            <span class="stl-name">۴. نوار موبیوس</span>
+            <span class="stl-dim">106 × 106 × 24 mm</span>
+          </div>
+          <button class="stl-dl" data-stl="mobius">دانلود STL</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="info-card" id="selected-info">
+        <b>ابعاد استاندارد فوم‌بورد:</b><br />
+        کل عرض: <b>۱۸۰ سانتی‌متر</b> (لت راست ۵۰ + وسط ۸۰ + لت چپ ۵۰) × ارتفاع <b>۱۰۰ سانتی‌متر</b>.<br />
+        برای چرخش با انگشت یا موس بکش و برای زوم اسکرول کن.
+      </div>
+    </div>
+  </aside>
+
+  <!-- Camera Presets Bottom Bar -->
+  <nav class="bottom-bar" id="cam-bar">
+    <button class="cam-btn active" data-cam="overview">🏛️ نمای کل</button>
+    <button class="cam-btn" data-cam="fractal">❄️ فرکتال</button>
+    <button class="cam-btn" data-cam="chaos">🦋 نظریه آشوب</button>
+    <button class="cam-btn" data-cam="infinity">♾️ بی‌نهایت</button>
+    <button class="cam-btn" data-cam="side">📏 نمای بغل (عمق)</button>
+    <button class="cam-btn" data-cam="top">📐 نمای بالا</button>
+  </nav>
+
+  <!-- Three.js & OrbitControls via jsDelivr (Reliable & Fast) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // =====================================================
+    // SETUP SCENE, CAMERA, RENDERER
+    // Scale: 1 unit = 10 cm (Board = 18 units wide x 10 tall)
+    // =====================================================
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x070c18, 0.018);
+
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 120);
+    camera.position.set(0, 6.2, 22.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.target.set(0, 5.1, 0);
+    controls.minDistance = 5;
+    controls.maxDistance = 38;
+    controls.maxPolarAngle = Math.PI * 0.52;
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0xdbeafe, 0.75));
+    scene.add(new THREE.HemisphereLight(0xfef3c7, 0x0f172a, 0.55));
+
+    const keyLight = new THREE.DirectionalLight(0xfff7ed, 1.55);
+    keyLight.position.set(8, 16, 15);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(2048, 2048);
+    keyLight.shadow.camera.near = 2;
+    keyLight.shadow.camera.far = 45;
+    const d = 14;
+    keyLight.shadow.camera.left = -d;
+    keyLight.shadow.camera.right = d;
+    keyLight.shadow.camera.top = d;
+    keyLight.shadow.camera.bottom = -d;
+    keyLight.shadow.bias = -0.0005;
+    scene.add(keyLight);
+
+    const rimLight = new THREE.PointLight(0x38bdf8, 18, 30);
+    rimLight.position.set(-10, 9, 8);
+    scene.add(rimLight);
+
+    const goldSpot = new THREE.PointLight(0xf0c75e, 14, 24);
+    goldSpot.position.set(2, 8.5, 9);
+    scene.add(goldSpot);
+
+    // Desk / Table surface
+    const deskGeo = new THREE.BoxGeometry(34, 0.6, 18);
+    const deskMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.78, metalness: 0.12 });
+    const desk = new THREE.Mesh(deskGeo, deskMat);
+    desk.position.set(0, -0.3, 1.5);
+    desk.receiveShadow = true;
+    scene.add(desk);
+
+    const gridHelper = new THREE.GridHelper(32, 32, 0x334155, 0x1e293b);
+    gridHelper.position.set(0, 0.01, 1.5);
+    scene.add(gridHelper);
+
+    // =====================================================
+    // CANVAS TEXTURE HELPER FOR CRISP PERSIAN CARDS & TITLES
+    // =====================================================
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const paragraphs = text.split('\n');
+      let curY = y;
+      for (const p of paragraphs) {
+        const words = p.split(' ');
+        let line = '';
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + (line ? ' ' : '') + words[n];
+          if (ctx.measureText(testLine).width > maxWidth && line) {
+            ctx.fillText(line, x, curY);
+            line = words[n];
+            curY += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        if (line) {
+          ctx.fillText(line, x, curY);
+          curY += lineHeight;
+        }
+      }
+    }
+
+    function createCardTexture({ title, body, width = 560, height = 360, accent = '#d4a02e', bg = '#f8fafc', dark = false }) {
+      const c = document.createElement('canvas');
+      c.width = width;
+      c.height = height;
+      const ctx = c.getContext('2d');
+      ctx.direction = 'rtl';
+
+      // Background
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.roundRect(4, 4, width - 8, height - 8, 18);
+      ctx.fill();
+
+      // Subtle border
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Top accent strip
+      ctx.fillStyle = accent;
+      ctx.beginPath();
+      ctx.roundRect(4, 4, width - 8, 56, [18, 18, 0, 0]);
+      ctx.fill();
+
+      // Title
+      ctx.fillStyle = dark ? '#f8fafc' : '#0b1120';
+      ctx.font = '800 25px Vazirmatn, Tahoma, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(title, width - 24, 34);
+
+      // Body
+      ctx.fillStyle = dark ? '#e2e8f0' : '#1e293b';
+      ctx.font = '500 20px Vazirmatn, Tahoma, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      wrapText(ctx, body, width - 24, 78, width - 48, 33);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    function createBannerTexture(title, subtitle, width = 1024, height = 190, color = '#f0c75e') {
+      const c = document.createElement('canvas');
+      c.width = width;
+      c.height = height;
+      const ctx = c.getContext('2d');
+      ctx.direction = 'rtl';
+      ctx.clearRect(0, 0, width, height);
+
+      // Decorative gold lines
+      ctx.strokeStyle = 'rgba(240, 199, 94, 0.45)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(40, height - 18);
+      ctx.lineTo(width - 40, height - 18);
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      ctx.font = '900 66px Vazirmatn, Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.6)';
+      ctx.shadowBlur = 12;
+      ctx.fillText(title, width / 2, subtitle ? 68 : height / 2);
+
+      if (subtitle) {
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '500 24px Vazirmatn, Tahoma, sans-serif';
+        ctx.fillText(subtitle, width / 2, 134);
+      }
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    function addCard(parent, opts) {
+      const tex = createCardTexture(opts);
+      const geo = new THREE.PlaneGeometry(opts.w, opts.h);
+      const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.65, metalness: 0.05 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(opts.x, opts.y, opts.z ?? 0.14);
+      parent.add(mesh);
+      return mesh;
+    }
+
+    function addLabel(parent, text, x, y, w = 4.2, h = 0.85, color = '#f0c75e', subtitle = '') {
+      const tex = createBannerTexture(text, subtitle, 820, subtitle ? 180 : 120, color);
+      const mesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(w, h),
+        new THREE.MeshBasicMaterial({ map: tex, transparent: true })
+      );
+      mesh.position.set(x, y, 0.15);
+      parent.add(mesh);
+      return mesh;
+    }
+
+    // =====================================================
+    // TRI-FOLD FOAM BOARD ARCHITECTURE
+    // Center: 8.0 x 10.0 | Left: 5.0 x 10.0 | Right: 5.0 x 10.0
+    // =====================================================
+    const boardThickness = 0.22;
+    const boardMat = new THREE.MeshStandardMaterial({ color: 0x0b1528, roughness: 0.88, metalness: 0.08 });
+    const trimMat = new THREE.MeshStandardMaterial({ color: 0xd4a02e, roughness: 0.35, metalness: 0.8 });
+
+    const boardRoot = new THREE.Group();
+    scene.add(boardRoot);
+
+    // Center Panel
+    const centerPanel = new THREE.Group();
+    centerPanel.position.set(0, 5.0, 0);
+    boardRoot.add(centerPanel);
+
+    const centerMesh = new THREE.Mesh(new THREE.BoxGeometry(8.0, 10.0, boardThickness), boardMat);
+    centerMesh.castShadow = true;
+    centerMesh.receiveShadow = true;
+    centerPanel.add(centerMesh);
+
+    // Right Wing (Fractal) hinged at X = +4.0
+    const rightHinge = new THREE.Group();
+    rightHinge.position.set(4.0, 5.0, 0);
+    boardRoot.add(rightHinge);
+
+    const rightPanel = new THREE.Group();
+    rightPanel.position.set(2.5, 0, 0);
+    rightHinge.add(rightPanel);
+
+    const rightMesh = new THREE.Mesh(new THREE.BoxGeometry(5.0, 10.0, boardThickness), boardMat);
+    rightMesh.castShadow = true;
+    rightMesh.receiveShadow = true;
+    rightPanel.add(rightMesh);
+
+    // Left Wing (Infinity) hinged at X = -4.0
+    const leftHinge = new THREE.Group();
+    leftHinge.position.set(-4.0, 5.0, 0);
+    boardRoot.add(leftHinge);
+
+    const leftPanel = new THREE.Group();
+    leftPanel.position.set(-2.5, 0, 0);
+    leftHinge.add(leftPanel);
+
+    const leftMesh = new THREE.Mesh(new THREE.BoxGeometry(5.0, 10.0, boardThickness), boardMat);
+    leftMesh.castShadow = true;
+    leftMesh.receiveShadow = true;
+    leftPanel.add(leftMesh);
+
+    // Subtle golden vertical hinge lines
+    for (const hx of [-4.0, 4.0]) {
+      const hingeStrip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 10.02, boardThickness + 0.02), trimMat);
+      hingeStrip.position.set(hx, 5.0, 0);
+      boardRoot.add(hingeStrip);
+    }
+
+    // Main Top Banner on Center Panel
+    addLabel(
+      centerPanel,
+      'نظم پنهان در دل بی‌نهایت',
+      0, 4.15, 7.6, 1.35, '#f0c75e',
+      'از تکرار بی‌پایان فرکتال تا اثر پروانه‌ای و پارادوکس بی‌نهایت'
+    );
+
+    // =====================================================
+    // SECTION 1 (RIGHT PANEL): FRACTAL + SIERPINSKI PYRAMID
+    // =====================================================
+    addLabel(rightPanel, 'فرکتال', 0, 4.25, 4.2, 0.78, '#38bdf8');
+
+    // Build real 3D Sierpinski Pyramid mesh (depth 3)
+    const sierpGroup = new THREE.Group();
+    sierpGroup.position.set(-0.35, 1.85, 0.14);
+    sierpGroup.rotation.x = Math.PI / 2; // Apex points straight out (+Z)
+    rightPanel.add(sierpGroup);
+
+    const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.42, metalness: 0.08 });
+    const basePlate = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.08, 2.1), new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.5 }));
+    basePlate.position.y = 0.04;
+    sierpGroup.add(basePlate);
+
+    function addSierpinskiVisual(cx, cz, yBase, w, h, depth) {
+      if (depth === 0) {
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(w * 0.74, h * 1.04, 4), whiteMat);
+        cone.rotation.y = Math.PI / 4;
+        cone.position.set(cx, yBase + h * 0.5, cz);
+        cone.castShadow = true;
+        cone.receiveShadow = true;
+        sierpGroup.add(cone);
+        return;
+      }
+      const hw = w * 0.25;
+      const nw = w * 0.5;
+      const nh = h * 0.5;
+      addSierpinskiVisual(cx - hw, cz - hw, yBase, nw, nh, depth - 1);
+      addSierpinskiVisual(cx + hw, cz - hw, yBase, nw, nh, depth - 1);
+      addSierpinskiVisual(cx + hw, cz + hw, yBase, nw, nh, depth - 1);
+      addSierpinskiVisual(cx - hw, cz + hw, yBase, nw, nh, depth - 1);
+      addSierpinskiVisual(cx, cz, yBase + nh, nw, nh, depth - 1);
+    }
+    addSierpinskiVisual(0, 0, 0.06, 2.0, 1.55, 3);
+    sierpGroup.userData = { info: '<b>هرم سرپینسکی (پرینت سه‌بعدی):</b><br/>ابعاد واقعی: ۱۲۴×۱۲۴×۹۶ میلی‌متر. بدون نیاز به ساپورت با فیلامنت سفید مات چاپ می‌شه!' };
+
+    // Magnifying glass hanging beside the pyramid
+    const magGroup = new THREE.Group();
+    magGroup.position.set(1.48, 2.15, 0.24);
+    rightPanel.add(magGroup);
+
+    const cordGeo = new THREE.CylinderGeometry(0.018, 0.018, 1.6, 8);
+    const cordMesh = new THREE.Mesh(cordGeo, trimMat);
+    cordMesh.position.set(0, 0.95, -0.05);
+    magGroup.add(cordMesh);
+
+    const magRim = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.045, 14, 32), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.85, roughness: 0.2 }));
+    magRim.castShadow = true;
+    magGroup.add(magRim);
+
+    const magGlass = new THREE.Mesh(
+      new THREE.CircleGeometry(0.34, 32),
+      new THREE.MeshPhysicalMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1 })
+    );
+    magGroup.add(magGlass);
+
+    const magHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.65, 12), new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 }));
+    magHandle.position.set(0.25, -0.52, 0);
+    magHandle.rotation.z = 0.45;
+    magGroup.add(magHandle);
+
+    // Fractal Text Cards
+    addCard(rightPanel, {
+      title: 'فرکتال چیه؟',
+      body: 'شکل‌هایی که «خودمتشابه» هستن؛ یعنی هرچقدر روشون زوم کنی، دقیقاً همون الگوی اصلی رو دوباره و دوباره تا بی‌نهایت می‌بینی! طبیعت با فرکتال‌ها ساخته شده.',
+      x: 0, y: -0.45, w: 4.35, h: 1.85, accent: '#38bdf8'
+    });
+    addCard(rightPanel, {
+      title: 'پارادوکس خط ساحلی',
+      body: 'هرچقدر خط‌کشت رو کوچیک‌تر کنی تا پیچ‌وخم صخره‌های ساحل رو اندازه بگیری، طول ساحل بیشتر می‌شه و به سمت بی‌نهایت می‌ره؛ مساحت محدود اما محیط بی‌نهایت!',
+      x: 0, y: -2.45, w: 4.35, h: 1.85, accent: '#0ea5e9'
+    });
+    addCard(rightPanel, {
+      title: 'ردپای فرکتال در طبیعت',
+      body: '• بدن ما: رگ‌های خونی، شاخه‌های ریه و نورون‌ها\n• گیاهان: کلم رومی، برگ سرخس و شاخه درختان\n• طبیعت: دانه برف، صاعقه، ابرها و کوهستان‌ها',
+      x: 0, y: -4.15, w: 4.35, h: 1.25, height: 240, accent: '#38bdf8', dark: true, bg: '#111c33'
+    });
+
+    // =====================================================
+    // SECTION 2 (CENTER PANEL): CHAOS THEORY, LORENZ & DOUBLE PENDULUM
+    // =====================================================
+    addLabel(centerPanel, 'نظریه آشوب و اثر پروانه‌ای', 0, 3.05, 5.4, 0.68, '#f0c75e');
+
+    // Lorenz Attractor 3D Mesh (Silk Gold)
+    function computeLorenzPoints(numPts = 1400) {
+      let x = 1, y = 1, z = 1;
+      const sigma = 10, rho = 28, beta = 8 / 3, dt = 0.0055;
+      for (let i = 0; i < 700; i++) {
+        const dx = sigma * (y - x), dy = x * (rho - z) - y, dz = x * y - beta * z;
+        x += dx * dt; y += dy * dt; z += dz * dt;
+      }
+      const pts = [];
+      const ang = -Math.PI / 4;
+      const ca = Math.cos(ang), sa = Math.sin(ang);
+      for (let i = 0; i < numPts; i++) {
+        const dx = sigma * (y - x), dy = x * (rho - z) - y, dz = x * y - beta * z;
+        x += dx * dt; y += dy * dt; z += dz * dt;
+        const rx = x * ca - y * sa;
+        const ry = x * sa + y * ca;
+        pts.push(new THREE.Vector3(rx * 0.068, (z - 25) * 0.056, ry * 0.025 + 0.48));
+      }
+      return pts;
+    }
+
+    const lorenzPts = computeLorenzPoints(1500);
+    const lorenzCurve = new THREE.CatmullRomCurve3(lorenzPts);
+    const lorenzGeo = new THREE.TubeGeometry(lorenzCurve, 900, 0.032, 8, false);
+    const silkGoldMat = new THREE.MeshStandardMaterial({
+      color: 0xf5c84c,
+      roughness: 0.22,
+      metalness: 0.88,
+      emissive: 0x3b2800,
+      emissiveIntensity: 0.25
+    });
+    const lorenzMesh = new THREE.Mesh(lorenzGeo, silkGoldMat);
+    lorenzMesh.position.set(0, 1.35, 0.14);
+    lorenzMesh.castShadow = true;
+    lorenzMesh.userData = { info: '<b>جاذب لورنز (پرینت سه‌بعدی Silk Gold):</b><br/>ابعاد واقعی: ۱۴۸×۹۸×۳۲ میلی‌متر. نمودار ریاضیِ آشوب که دقیقاً شبیه دو بال پروانه‌ست!' };
+    centerPanel.add(lorenzMesh);
+
+    // Interactive Double Pendulum (Real RK4 Chaos Physics)
+    const pendPivot = new THREE.Group();
+    pendPivot.position.set(0, -1.35, 0.32);
+    centerPanel.add(pendPivot);
+
+    const mountFlange = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.28, 0.3, 0.14, 24),
+      new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4, metalness: 0.5 })
+    );
+    mountFlange.rotation.x = Math.PI / 2;
+    mountFlange.position.z = -0.1;
+    pendPivot.add(mountFlange);
+
+    const bearingMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.15 });
+    const armDarkMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.38, metalness: 0.35 });
+
+    const L1 = 1.32, L2 = 1.15;
+    const arm1Group = new THREE.Group();
+    pendPivot.add(arm1Group);
+
+    const arm1Bar = new THREE.Mesh(new THREE.BoxGeometry(0.18, L1, 0.11), armDarkMat);
+    arm1Bar.position.set(0, -L1 / 2, 0);
+    arm1Bar.castShadow = true;
+    arm1Group.add(arm1Bar);
+
+    const b1 = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.045, 12, 24), bearingMat);
+    arm1Group.add(b1);
+
+    const arm2Group = new THREE.Group();
+    arm2Group.position.set(0, -L1, 0.13);
+    arm1Group.add(arm2Group);
+
+    const b2 = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.045, 12, 24), bearingMat);
+    arm2Group.add(b2);
+
+    const arm2Bar = new THREE.Mesh(new THREE.BoxGeometry(0.16, L2, 0.11), silkGoldMat);
+    arm2Bar.position.set(0, -L2 / 2, 0);
+    arm2Bar.castShadow = true;
+    arm2Group.add(arm2Bar);
+
+    const bobMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.14, 28), silkGoldMat);
+    bobMesh.rotation.x = Math.PI / 2;
+    bobMesh.position.set(0, -L2, 0);
+    bobMesh.castShadow = true;
+    arm2Group.add(bobMesh);
+
+    // Invisible click hitbox for pendulum
+    const pendHitbox = new THREE.Mesh(
+      new THREE.CircleGeometry(2.3, 24),
+      new THREE.MeshBasicMaterial({ visible: false })
+    );
+    pendHitbox.position.set(0, -0.5, 0.2);
+    pendHitbox.userData = { action: 'pendulum' };
+    pendPivot.add(pendHitbox);
+
+    // Chaos Trails (Golden = Current, Cyan = Previous Run to show Butterfly Effect!)
+    const MAX_TRAIL = 320;
+    const curTrailPts = new Float32Array(MAX_TRAIL * 3);
+    const prevTrailPts = new Float32Array(MAX_TRAIL * 3);
+    const curTrailGeo = new THREE.BufferGeometry();
+    curTrailGeo.setAttribute('position', new THREE.BufferAttribute(curTrailPts, 3));
+    const curTrailLine = new THREE.Line(curTrailGeo, new THREE.LineBasicMaterial({ color: 0xf0c75e, transparent: true, opacity: 0.9 }));
+    pendPivot.add(curTrailLine);
+
+    const prevTrailGeo = new THREE.BufferGeometry();
+    prevTrailGeo.setAttribute('position', new THREE.BufferAttribute(prevTrailPts, 3));
+    const prevTrailLine = new THREE.Line(prevTrailGeo, new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.5 }));
+    pendPivot.add(prevTrailLine);
+
+    let pState = { a1: 2.35, a2: 2.15, w1: 0, w2: 0 };
+    let trailCount = 0;
+    let prevTrailCount = 0;
+    let runNumber = 1;
+
+    function triggerButterflyPendulum(notify = true) {
+      // Save current trail as cyan comparison trail
+      prevTrailPts.set(curTrailPts);
+      prevTrailCount = trailCount;
+      prevTrailGeo.setDrawRange(0, prevTrailCount);
+      prevTrailGeo.attributes.position.needsUpdate = true;
+
+      // Perturb starting angle by only 0.01 degrees (0.0001745 rad)
+      runNumber++;
+      const eps = 0.0001745 * (runNumber % 2 === 0 ? 1 : -1) * Math.min(runNumber, 5);
+      pState = { a1: 2.35 + eps, a2: 2.15, w1: 0, w2: 0 };
+      trailCount = 0;
+      curTrailGeo.setDrawRange(0, 0);
+
+      if (notify) {
+        showToast('🦋 آونگ فقط با <b>۰.۰۱ درجه تغییر</b> رها شد! مسیر طلایی (جدید) رو با مسیر آبی (قبلی) مقایسه کن تا واگرایی آشوبناک رو ببینی.');
+      }
+    }
+
+    function stepPendulum(dt) {
+      const g = 9.81, m1 = 1.2, m2 = 1.0, l1 = L1, l2 = L2;
+      function derivs(s) {
+        const d = s.a1 - s.a2;
+        const den1 = (2 * m1 + m2 - m2 * Math.cos(2 * d));
+        const dw1 = (
+          -g * (2 * m1 + m2) * Math.sin(s.a1)
+          - m2 * g * Math.sin(s.a1 - 2 * s.a2)
+          - 2 * Math.sin(d) * m2 * (s.w2 * s.w2 * l2 + s.w1 * s.w1 * l1 * Math.cos(d))
+        ) / (l1 * den1);
+        const dw2 = (
+          2 * Math.sin(d) * (
+            s.w1 * s.w1 * l1 * (m1 + m2)
+            + g * (m1 + m2) * Math.cos(s.a1)
+            + s.w2 * s.w2 * l2 * m2 * Math.cos(d)
+          )
+        ) / (l2 * den1);
+        return { a1: s.w1, a2: s.w2, w1: dw1 - 0.012 * s.w1, w2: dw2 - 0.012 * s.w2 };
+      }
+      const k1 = derivs(pState);
+      const s2 = { a1: pState.a1 + 0.5*dt*k1.a1, a2: pState.a2 + 0.5*dt*k1.a2, w1: pState.w1 + 0.5*dt*k1.w1, w2: pState.w2 + 0.5*dt*k1.w2 };
+      const k2 = derivs(s2);
+      const s3 = { a1: pState.a1 + 0.5*dt*k2.a1, a2: pState.a2 + 0.5*dt*k2.a2, w1: pState.w1 + 0.5*dt*k2.w1, w2: pState.w2 + 0.5*dt*k2.w2 };
+      const k3 = derivs(s3);
+      const s4 = { a1: pState.a1 + dt*k3.a1, a2: pState.a2 + dt*k3.a2, w1: pState.w1 + dt*k3.w1, w2: pState.w2 + dt*k3.w2 };
+      const k4 = derivs(s4);
+
+      pState.a1 += (dt / 6) * (k1.a1 + 2*k2.a1 + 2*k3.a1 + k4.a1);
+      pState.a2 += (dt / 6) * (k1.a2 + 2*k2.a2 + 2*k3.a2 + k4.a2);
+      pState.w1 += (dt / 6) * (k1.w1 + 2*k2.w1 + 2*k3.w1 + k4.w1);
+      pState.w2 += (dt / 6) * (k1.w2 + 2*k2.w2 + 2*k3.w2 + k4.w2);
+
+      arm1Group.rotation.z = pState.a1;
+      arm2Group.rotation.z = pState.a2 - pState.a1;
+
+      // Record tip position
+      const tx = l1 * Math.sin(pState.a1) + l2 * Math.sin(pState.a2);
+      const ty = -l1 * Math.cos(pState.a1) - l2 * Math.cos(pState.a2);
+      if (trailCount < MAX_TRAIL) {
+        curTrailPts[trailCount * 3] = tx;
+        curTrailPts[trailCount * 3 + 1] = ty;
+        curTrailPts[trailCount * 3 + 2] = 0.05;
+        trailCount++;
+      } else {
+        curTrailPts.copyWithin(0, 3);
+        curTrailPts[(MAX_TRAIL - 1) * 3] = tx;
+        curTrailPts[(MAX_TRAIL - 1) * 3 + 1] = ty;
+        curTrailPts[(MAX_TRAIL - 1) * 3 + 2] = 0.05;
+      }
+      curTrailGeo.setDrawRange(0, trailCount);
+      curTrailGeo.attributes.position.needsUpdate = true;
+    }
+
+    // Center Panel Cards (left & right of Lorenz + bottom of Pendulum)
+    addCard(centerPanel, {
+      title: 'آشوب، بی‌نظمی نیست!',
+      body: 'آشوب یعنی سیستمی که قانون دقیق ریاضی داره اما به‌شدت به شرایط اولیه حساسه؛ یه تغییر میکروسکوپی، آینده رو زیر و رو می‌کنه.',
+      x: 2.68, y: 1.35, w: 2.25, h: 2.3, width: 390, height: 400, accent: '#f0c75e'
+    });
+    addCard(centerPanel, {
+      title: 'آزمایش لورنز (1961)',
+      body: 'ادوارد لورنز عدد 0.506127 رو به 0.506 رُند کرد! همین خطای کمتر از یک‌هزارم، کل پیش‌بینی آب‌وهوا رو عوض کرد و «اثر پروانه‌ای» متولد شد.',
+      x: -2.68, y: 1.35, w: 2.25, h: 2.3, width: 390, height: 400, accent: '#f0c75e'
+    });
+    addCard(centerPanel, {
+      title: 'تستش کن! 🦋 (آونگ دوگانه)',
+      body: 'روی این آونگ کلیک کن تا دو بار با یک زاویه (با ۰.۰۱ درجه اختلاف) رها بشه؛ هرگز دو مسیر تکراری نخواهی دید!',
+      x: 2.68, y: -3.2, w: 2.25, h: 2.0, width: 390, height: 350, accent: '#38bdf8', dark: true, bg: '#111c33'
+    });
+    addCard(centerPanel, {
+      title: 'جاذب لورنز چیست؟',
+      body: 'مسیر حرکت سیستم آشوبناک هرگز خودش رو قطع نمی‌کنه و تکراری نمی‌شه، اما توی فضایی محدود شبیه دو بال پروانه می‌چرخه!',
+      x: -2.68, y: -3.2, w: 2.25, h: 2.0, width: 390, height: 350, accent: '#f0c75e', dark: true, bg: '#111c33'
+    });
+
+    // =====================================================
+    // SECTION 3 (LEFT PANEL): INFINITY, MÖBIUS STRIP & HILBERT'S HOTEL
+    // =====================================================
+    addLabel(leftPanel, 'مفهوم بی‌نهایت', 0, 4.25, 4.2, 0.78, '#38bdf8');
+
+    // Parametric Thickened Möbius Strip
+    function createMobiusGeometry(R = 0.86, halfW = 0.25, halfT = 0.05, uSegs = 96, vSegs = 16) {
+      const positions = [];
+      const indices = [];
+      for (let i = 0; i <= uSegs; i++) {
+        const u = (i / uSegs) * Math.PI * 2;
+        const cu = Math.cos(u), su = Math.sin(u);
+        const phi = u / 2;
+        const cp = Math.cos(phi), sp = Math.sin(phi);
+        for (let j = 0; j <= vSegs; j++) {
+          const t = (j / vSegs) * Math.PI * 2;
+          const ca = Math.cos(t), sa = Math.sin(t);
+          const a = halfW * Math.sign(ca) * Math.pow(Math.abs(ca), 0.5);
+          const b = halfT * Math.sign(sa) * Math.pow(Math.abs(sa), 0.5);
+          const rOff = a * cp - b * sp;
+          const zOff = a * sp + b * cp;
+          positions.push((R + rOff) * cu, (R + rOff) * su, zOff);
+        }
+      }
+      const stride = vSegs + 1;
+      for (let i = 0; i < uSegs; i++) {
+        for (let j = 0; j < vSegs; j++) {
+          const a = i * stride + j;
+          const b = (i + 1) * stride + j;
+          const c = (i + 1) * stride + (j + 1);
+          const d = i * stride + (j + 1);
+          indices.push(a, b, c, a, c, d);
+        }
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    const mobiusGroup = new THREE.Group();
+    mobiusGroup.position.set(0, 2.05, 0.45);
+    mobiusGroup.rotation.x = 0.28;
+    leftPanel.add(mobiusGroup);
+
+    const mobiusMesh = new THREE.Mesh(
+      createMobiusGeometry(),
+      new THREE.MeshStandardMaterial({ color: 0xe0f2fe, roughness: 0.32, metalness: 0.18 })
+    );
+    mobiusMesh.castShadow = true;
+    mobiusMesh.userData = { info: '<b>نوار یک‌رویه موبیوس (پرینت سه‌بعدی):</b><br/>ابعاد واقعی: ۱۰۶×۱۰۶×۲۴ میلی‌متر. فقط یک سطح داره؛ به مورچه قرمز نگاه کن که بدون عبور از لبه کل مسیر رو می‌ره!' };
+    mobiusGroup.add(mobiusMesh);
+
+    // Animated Red Ant crawling along the one-sided Möbius surface (0 -> 4*PI!)
+    const antGroup = new THREE.Group();
+    const antMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.35 });
+    const antHead = new THREE.Mesh(new THREE.SphereGeometry(0.055, 10, 10), antMat);
+    antHead.position.set(0.09, 0, 0);
+    const antBody = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 10), antMat);
+    const antTail = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 10), antMat);
+    antTail.position.set(-0.09, 0, 0);
+    antGroup.add(antHead, antBody, antTail);
+    mobiusGroup.add(antGroup);
+
+    // Infinity Text Cards
+    addCard(leftPanel, {
+      title: 'بی‌نهایت عدد نیست!',
+      body: 'بی‌نهایت (∞) یک عدد خیلی بزرگ نیست، یک فرآیند بی‌پایانه! کانتور ثابت کرد بعضی بی‌نهایت‌ها از بی‌نهایت‌های دیگه بزرگ‌ترن.',
+      x: 0, y: 0.15, w: 4.35, h: 1.55, height: 290, accent: '#38bdf8'
+    });
+    addCard(leftPanel, {
+      title: 'هتل بی‌نهایت هیلبرت (کلیک کن 🚪)',
+      body: 'هتلی با بی‌نهایت اتاق که همه‌شون پرن! برای جا دادن مسافر جدید، روی هر در کلیک کن تا راهکارش رو ببینی:',
+      x: 0, y: -1.35, w: 4.35, h: 1.2, height: 230, accent: '#f0c75e', dark: true, bg: '#111c33'
+    });
+
+    // Interactive Hinged Cardboard Doors for Hilbert's Hotel
+    const doorConfigs = [
+      { label: '۱', secret: 'مسافر ۱ می‌ره\nاتاق ۲ ➔', x: 1.55 },
+      { label: '۲', secret: 'مسافر ۲ می‌ره\nاتاق ۳ ➔', x: 0.52 },
+      { label: 'n', secret: 'مسافر n می‌ره\nاتاق n+1 ➔', x: -0.52 },
+      { label: '∞', secret: 'اتاق ۱ خالی\nشد! 🤯', x: -1.55 },
+    ];
+    const interactiveDoors = [];
+
+    function makeDoorFrontTex(num) {
+      const c = document.createElement('canvas');
+      c.width = 180; c.height = 260;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#c89b6e';
+      ctx.fillRect(0, 0, 180, 260);
+      ctx.strokeStyle = '#6b4423';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(10, 10, 160, 240);
+      ctx.fillStyle = '#1e1b18';
+      ctx.font = '900 72px Vazirmatn, Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(num, 90, 120);
+      // Doorknob
+      ctx.fillStyle = '#f0c75e';
+      ctx.beginPath();
+      ctx.arc(36, 145, 11, 0, Math.PI * 2);
+      ctx.fill();
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+
+    function makeDoorBackTex(secret) {
+      const c = document.createElement('canvas');
+      c.width = 200; c.height = 260;
+      const ctx = c.getContext('2d');
+      ctx.direction = 'rtl';
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, 200, 260);
+      ctx.strokeStyle = '#f0c75e';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(5, 5, 190, 250);
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '700 26px Vazirmatn, Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const lines = secret.split('\n');
+      lines.forEach((ln, idx) => ctx.fillText(ln, 100, 105 + idx * 44));
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+
+    for (const cfg of doorConfigs) {
+      const doorFrame = new THREE.Group();
+      doorFrame.position.set(cfg.x, -2.8, 0.14);
+      leftPanel.add(doorFrame);
+
+      // Secret backing behind the door
+      const backMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.84, 1.24),
+        new THREE.MeshBasicMaterial({ map: makeDoorBackTex(cfg.secret) })
+      );
+      doorFrame.add(backMesh);
+
+      // Hinged leaf (pivots on right edge)
+      const pivot = new THREE.Group();
+      pivot.position.set(0.42, 0, 0.03);
+      doorFrame.add(pivot);
+
+      const leaf = new THREE.Mesh(
+        new THREE.BoxGeometry(0.84, 1.24, 0.05),
+        new THREE.MeshStandardMaterial({ map: makeDoorFrontTex(cfg.label), roughness: 0.72 })
+      );
+      leaf.position.set(-0.42, 0, 0);
+      leaf.castShadow = true;
+      leaf.userData = { action: 'door', doorObj: null };
+      pivot.add(leaf);
+
+      const doorState = { pivot, open: false, angle: 0, label: cfg.label, secret: cfg.secret.replace('\n', ' ') };
+      leaf.userData.doorObj = doorState;
+      interactiveDoors.push(doorState);
+    }
+
+    // Bottom Left QR Info Badge
+    addCard(leftPanel, {
+      title: 'نوار موبیوس + کد QR زنده',
+      body: 'با اسکن کد QR پایین بورد، دقیقاً همین نمایشگاه سه‌بعدی تعاملی و شبیه‌ساز زنده روی گوشی باز می‌شه! 📱✨',
+      x: 0, y: -4.18, w: 4.35, h: 1.15, height: 220, accent: '#38bdf8'
+    });
+
+    // =====================================================
+    // CONNECTING GOLD & CYAN STRINGS (DYNAMIC WITH FOLD ANGLE!)
+    // =====================================================
+    const stringPairs = [
+      { aPanel: rightPanel, aLocal: new THREE.Vector3(-1.3, 3.8, 0.18), bPanel: centerPanel, bLocal: new THREE.Vector3(0.4, 2.1, 0.45), color: 0x38bdf8 },
+      { aPanel: leftPanel,  aLocal: new THREE.Vector3(1.3, 3.8, 0.18),  bPanel: centerPanel, bLocal: new THREE.Vector3(-0.4, 2.1, 0.45), color: 0x38bdf8 },
+      { aPanel: rightPanel, aLocal: new THREE.Vector3(-0.4, 1.85, 0.55), bPanel: centerPanel, bLocal: new THREE.Vector3(0, -1.35, 0.35), color: 0xf0c75e },
+      { aPanel: leftPanel,  aLocal: new THREE.Vector3(0.0, 2.05, 0.55),  bPanel: centerPanel, bLocal: new THREE.Vector3(0, -1.35, 0.35), color: 0xf0c75e },
+    ];
+    const stringLines = stringPairs.map(sp => {
+      const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+      const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: sp.color, transparent: true, opacity: 0.72 }));
+      scene.add(line);
+      return { ...sp, line };
+    });
+
+    function updateStrings() {
+      boardRoot.updateMatrixWorld(true);
+      const va = new THREE.Vector3(), vb = new THREE.Vector3();
+      for (const s of stringLines) {
+        va.copy(s.aLocal).applyMatrix4(s.aPanel.matrixWorld);
+        vb.copy(s.bLocal).applyMatrix4(s.bPanel.matrixWorld);
+        const pos = s.line.geometry.attributes.position;
+        pos.setXYZ(0, va.x, va.y, va.z);
+        pos.setXYZ(1, vb.x, vb.y, vb.z);
+        pos.needsUpdate = true;
+      }
+    }
+
+    // =====================================================
+    // BLUEPRINT DIMENSION OVERLAY GROUP
+    // =====================================================
+    const blueprintGroup = new THREE.Group();
+    blueprintGroup.visible = false;
+    boardRoot.add(blueprintGroup);
+
+    function makeDimSprite(text, bg = '#0ea5e9') {
+      const c = document.createElement('canvas');
+      c.width = 256; c.height = 72;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.roundRect(6, 6, 244, 60, 14);
+      ctx.fill();
+      ctx.fillStyle = '#070c18';
+      ctx.font = '800 28px Vazirmatn, Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 128, 37);
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false }));
+      sp.scale.set(2.1, 0.6, 1);
+      return sp;
+    }
+
+    function addDimLine(parent, p1, p2, label, color = 0x38bdf8) {
+      const geo = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+      parent.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color })));
+      const sp = makeDimSprite(label);
+      sp.position.copy(p1).add(p2).multiplyScalar(0.5);
+      sp.position.z += 0.25;
+      parent.add(sp);
+    }
+
+    addDimLine(blueprintGroup, new THREE.Vector3(-4, 10.65, 0.2), new THREE.Vector3(4, 10.65, 0.2), 'وسط: 80 cm');
+    addDimLine(blueprintGroup, new THREE.Vector3(-4.6, 0, 0.2), new THREE.Vector3(-4.6, 10, 0.2), 'ارتفاع: 100 cm');
+    const rightDim = makeDimSprite('لت راست: 50 cm', '#f0c75e');
+    rightDim.position.set(0, 5.55, 0.25);
+    const leftDim = makeDimSprite('لت چپ: 50 cm', '#f0c75e');
+    leftDim.position.set(0, 5.55, 0.25);
+    rightPanel.add(rightDim);
+    leftPanel.add(leftDim);
+    rightDim.visible = false;
+    leftDim.visible = false;
+
+    // =====================================================
+    // FOLD ANGLE CONTROL
+    // =====================================================
+    function setFoldAngle(deg) {
+      const rad = THREE.MathUtils.degToRad(deg);
+      rightHinge.rotation.y = -rad;
+      leftHinge.rotation.y = rad;
+      document.getElementById('fold-val').textContent = `${deg}°`;
+      updateStrings();
+    }
+    setFoldAngle(20);
+
+    document.getElementById('fold-slider').addEventListener('input', e => {
+      setFoldAngle(Number(e.target.value));
+    });
+
+    // =====================================================
+    // CAMERA SMOOTH TRANSITIONS
+    // =====================================================
+    const camPresets = {
+      overview: { pos: new THREE.Vector3(0, 6.0, 22.5), target: new THREE.Vector3(0, 5.0, 0) },
+      fractal:  { pos: new THREE.Vector3(8.5, 5.5, 11.2), target: new THREE.Vector3(5.8, 5.1, 1.2) },
+      chaos:    { pos: new THREE.Vector3(0, 4.9, 12.2), target: new THREE.Vector3(0, 4.8, 0.4) },
+      infinity: { pos: new THREE.Vector3(-8.5, 5.5, 11.2), target: new THREE.Vector3(-5.8, 5.1, 1.2) },
+      side:     { pos: new THREE.Vector3(19.5, 5.2, 8.0), target: new THREE.Vector3(0, 5.0, 0.5) },
+      top:      { pos: new THREE.Vector3(0, 23.0, 9.5), target: new THREE.Vector3(0, 4.0, 0.5) },
+    };
+
+    let camAnim = null;
+    function moveCamera(key) {
+      const preset = camPresets[key];
+      if (!preset) return;
+      camAnim = {
+        startPos: camera.position.clone(),
+        endPos: preset.pos.clone(),
+        startTarget: controls.target.clone(),
+        endTarget: preset.target.clone(),
+        t: 0
+      };
+      document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === key));
+    }
+
+    document.querySelectorAll('.cam-btn').forEach(btn => {
+      btn.addEventListener('click', () => moveCamera(btn.dataset.cam));
+    });
+
+    // =====================================================
+    // RAYCASTER FOR CLICKING DOORS, PENDULUM & 3D PARTS
+    // =====================================================
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let downPos = { x: 0, y: 0 };
+
+    renderer.domElement.addEventListener('pointerdown', e => {
+      downPos = { x: e.clientX, y: e.clientY };
+    });
+
+    renderer.domElement.addEventListener('pointerup', e => {
+      if (Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) > 7) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+
+      const hits = raycaster.intersectObjects(boardRoot.children, true);
+      for (const hit of hits) {
+        let obj = hit.object;
+        while (obj) {
+          if (obj.userData && obj.userData.action === 'door') {
+            const d = obj.userData.doorObj;
+            d.open = !d.open;
+            showToast(`🚪 در اتاق <b>${d.label}</b> ${d.open ? 'باز شد: ' + d.secret : 'بسته شد!'}`);
+            return;
+          }
+          if (obj.userData && obj.userData.action === 'pendulum') {
+            triggerButterflyPendulum(true);
+            return;
+          }
+          if (obj.userData && obj.userData.info) {
+            document.getElementById('selected-info').innerHTML = obj.userData.info;
+            showToast(obj.userData.info);
+            return;
+          }
+          obj = obj.parent;
+        }
+      }
+    });
+
+    // =====================================================
+    // REAL BINARY STL EXPORTER (MILLIMETER SCALE FOR 3D PRINTERS)
+    // =====================================================
+    function exportTrianglesToSTL(tris, filename) {
+      const n = tris.length;
+      const buf = new ArrayBuffer(84 + n * 50);
+      const view = new DataView(buf);
+      const header = 'Science Wall Newspaper 3D Print Model (mm)';
+      for (let i = 0; i < header.length; i++) view.setUint8(i, header.charCodeAt(i));
+      view.setUint32(80, n, true);
+
+      let offset = 84;
+      for (let i = 0; i < n; i++) {
+        const [v0, v1, v2] = tris[i];
+        const ux = v1[0] - v0[0], uy = v1[1] - v0[1], uz = v1[2] - v0[2];
+        const vx = v2[0] - v0[0], vy = v2[1] - v0[1], vz = v2[2] - v0[2];
+        let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+        const len = Math.hypot(nx, ny, nz) || 1;
+        nx /= len; ny /= len; nz /= len;
+        view.setFloat32(offset, nx, true); offset += 4;
+        view.setFloat32(offset, ny, true); offset += 4;
+        view.setFloat32(offset, nz, true); offset += 4;
+        for (const v of [v0, v1, v2]) {
+          view.setFloat32(offset, v[0], true); offset += 4;
+          view.setFloat32(offset, v[1], true); offset += 4;
+          view.setFloat32(offset, v[2], true); offset += 4;
+        }
+        view.setUint16(offset, 0, true); offset += 2;
+      }
+
+      const blob = new Blob([buf], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function pushBox(tris, cx, cy, cz, sx, sy, sz) {
+      const hx = sx / 2, hy = sy / 2, hz = sz / 2;
+      const v = [
+        [cx-hx, cy-hy, cz-hz], [cx+hx, cy-hy, cz-hz], [cx+hx, cy+hy, cz-hz], [cx-hx, cy+hy, cz-hz],
+        [cx-hx, cy-hy, cz+hz], [cx+hx, cy-hy, cz+hz], [cx+hx, cy+hy, cz+hz], [cx-hx, cy+hy, cz+hz],
+      ];
+      const f = [
+        [0,2,1],[0,3,2],[4,5,6],[4,6,7],
+        [0,1,5],[0,5,4],[2,3,7],[2,7,6],
+        [0,4,7],[0,7,3],[1,2,6],[1,6,5]
+      ];
+      for (const [a,b,c] of f) tris.push([v[a], v[b], v[c]]);
+    }
+
+    function pushAnnulus(tris, cx, cy, rIn, rOut, z0, z1, segs = 48) {
+      for (let i = 0; i < segs; i++) {
+        const a0 = (i / segs) * Math.PI * 2, a1 = ((i + 1) / segs) * Math.PI * 2;
+        const c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1);
+        const o0b = [cx + rOut*c0, cy + rOut*s0, z0], o1b = [cx + rOut*c1, cy + rOut*s1, z0];
+        const o0t = [cx + rOut*c0, cy + rOut*s0, z1], o1t = [cx + rOut*c1, cy + rOut*s1, z1];
+        if (rIn <= 0.001) {
+          const cb = [cx, cy, z0], ct = [cx, cy, z1];
+          tris.push([cb, o1b, o0b], [ct, o0t, o1t], [o0b, o1b, o1t], [o0b, o1t, o0t]);
+        } else {
+          const i0b = [cx + rIn*c0, cy + rIn*s0, z0], i1b = [cx + rIn*c1, cy + rIn*s1, z0];
+          const i0t = [cx + rIn*c0, cy + rIn*s0, z1], i1t = [cx + rIn*c1, cy + rIn*s1, z1];
+          tris.push(
+            [i0b, o1b, o0b], [i0b, i1b, o1b],
+            [i0t, o0t, o1t], [i0t, o1t, i1t],
+            [o0b, o1b, o1t], [o0b, o1t, o0t],
+            [i0b, i1t, i1b], [i0b, i0t, i1t]
+          );
+        }
+      }
+    }
+
+    function downloadSTL(type) {
+      const tris = [];
+      if (type === 'sierpinski') {
+        function rec(cx, cy, zb, w, h, d) {
+          if (d === 0) {
+            const wf = w * 1.08, hf = h * 1.08, hw = wf / 2;
+            const z0 = zb < 0.01 ? 0 : zb - h * 0.04;
+            const p0=[cx-hw,cy-hw,z0], p1=[cx+hw,cy-hw,z0], p2=[cx+hw,cy+hw,z0], p3=[cx-hw,cy+hw,z0], ap=[cx,cy,z0+hf];
+            tris.push([p0,p2,p1],[p0,p3,p2],[p0,p1,ap],[p1,p2,ap],[p2,p3,ap],[p3,p0,ap]);
+            return;
+          }
+          const hw = w/4, nw = w/2, nh = h/2;
+          rec(cx-hw,cy-hw,zb,nw,nh,d-1); rec(cx+hw,cy-hw,zb,nw,nh,d-1);
+          rec(cx+hw,cy+hw,zb,nw,nh,d-1); rec(cx-hw,cy+hw,zb,nw,nh,d-1);
+          rec(cx,cy,zb+nh,nw,nh,d-1);
+        }
+        rec(0, 0, 0, 120, 96, 3);
+        pushBox(tris, 0, 0, 0.8, 124, 124, 1.6);
+        exportTrianglesToSTL(tris, '01_sierpinski_pyramid_124mm.stl');
+      } else if (type === 'lorenz') {
+        const pts = computeLorenzPoints(1000).map(v => new THREE.Vector3(v.x * 55, v.y * 55, (v.z - 0.1) * 55));
+        const curve = new THREE.CatmullRomCurve3(pts);
+        const geo = new THREE.TubeGeometry(curve, 650, 1.75, 8, false);
+        const pos = geo.attributes.position, idx = geo.index;
+        for (let i = 0; i < idx.count; i += 3) {
+          const a = idx.getX(i), b = idx.getX(i+1), c = idx.getX(i+2);
+          tris.push([
+            [pos.getX(a), pos.getY(a), pos.getZ(a)],
+            [pos.getX(b), pos.getY(b), pos.getZ(b)],
+            [pos.getX(c), pos.getY(c), pos.getZ(c)],
+          ]);
+        }
+        pushBox(tris, 0, 0, 1.5, 6, 70, 3);
+        pushBox(tris, 0, 0, 1.5, 80, 5, 3);
+        exportTrianglesToSTL(tris, '02_lorenz_attractor_148mm.stl');
+      } else if (type === 'pendulum') {
+        // Upper arm (two 608 sockets: 22.2mm dia -> r=11.1mm)
+        pushAnnulus(tris, 0, 0, 11.1, 16.5, 0, 7.2);
+        pushAnnulus(tris, 110, 0, 11.1, 16.5, 0, 7.2);
+        pushBox(tris, 55, 0, 3.6, 82.4, 14, 7.2);
+        // Lower arm placed cleanly at Y = 46mm on same print bed
+        pushAnnulus(tris, 0, 46, 11.1, 16.5, 0, 7.2);
+        pushAnnulus(tris, 95, 46, 0, 19.0, 0, 7.2);
+        pushBox(tris, 47.5, 46, 3.6, 72, 13, 7.2);
+        exportTrianglesToSTL(tris, '03_double_pendulum_arms_608.stl');
+      } else if (type === 'mobius') {
+        const geo = createMobiusGeometry(44, 12, 2.25, 110, 18);
+        const pos = geo.attributes.position, idx = geo.index;
+        for (let i = 0; i < idx.count; i += 3) {
+          const a = idx.getX(i), b = idx.getX(i+1), c = idx.getX(i+2);
+          tris.push([
+            [pos.getX(a), pos.getY(a), pos.getZ(a) + 14],
+            [pos.getX(b), pos.getY(b), pos.getZ(b) + 14],
+            [pos.getX(c), pos.getY(c), pos.getZ(c) + 14],
+          ]);
+        }
+        exportTrianglesToSTL(tris, '04_mobius_strip_106mm.stl');
+      }
+      showToast('✅ فایل STL با مقیاس دقیق میلی‌متری دانلود شد! مستقیم بندازش توی اسلایسر (Cura / Orca).');
+    }
+
+    document.querySelectorAll('.stl-dl').forEach(btn => {
+      btn.addEventListener('click', () => downloadSTL(btn.dataset.stl));
+    });
+
+    // =====================================================
+    // UI BUTTON HANDLERS
+    // =====================================================
+    let toastTimer = null;
+    function showToast(html) {
+      const el = document.getElementById('toast');
+      el.innerHTML = html;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 4500);
+    }
+
+    const sidePanel = document.getElementById('side-panel');
+    const toggleBtn = document.getElementById('btn-toggle-panel');
+    // Start collapsed on small screens so mobile QR visitors see the 3D board immediately
+    if (window.innerWidth <= 768) {
+      sidePanel.classList.add('collapsed');
+      toggleBtn.classList.remove('active');
+    }
+    toggleBtn.addEventListener('click', () => {
+      const isClosed = sidePanel.classList.toggle('collapsed');
+      toggleBtn.classList.toggle('active', !isClosed);
+    });
+
+    document.getElementById('btn-blueprint').addEventListener('click', e => {
+      const active = e.currentTarget.classList.toggle('active');
+      blueprintGroup.visible = active;
+      rightDim.visible = active;
+      leftDim.visible = active;
+      showToast(active ? '📐 حالت نقشه مهندسی فعال شد (ابعاد دقیق به سانتی‌متر).' : 'نمای نمایشگاهی فعال شد.');
+    });
+
+    document.getElementById('btn-nudge').addEventListener('click', () => {
+      moveCamera('chaos');
+      triggerButterflyPendulum(true);
+    });
+    document.getElementById('btn-pendulum-reset').addEventListener('click', () => {
+      moveCamera('chaos');
+      triggerButterflyPendulum(true);
+    });
+
+    let allDoorsOpen = false;
+    document.getElementById('btn-doors-all').addEventListener('click', () => {
+      allDoorsOpen = !allDoorsOpen;
+      interactiveDoors.forEach(d => d.open = allDoorsOpen);
+      moveCamera('infinity');
+      showToast(allDoorsOpen ? '🏨 تمام درهای هتل هیلبرت باز شدن! هر مسافر یک اتاق جلوتر رفت و اتاق ۱ خالی شد.' : '🚪 درهای هتل هیلبرت بسته شدن.');
+    });
+
+    // =====================================================
+    // MAIN ANIMATION LOOP
+    // =====================================================
+    let antU = 0;
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.033);
+
+      // Step double pendulum (2 substeps for crisp accuracy)
+      stepPendulum(dt * 0.65);
+      stepPendulum(dt * 0.65);
+
+      // Crawl ant continuously along Möbius strip (full cycle = 4*PI!)
+      antU = (antU + dt * 0.72) % (Math.PI * 4);
+      const R = 0.86, offsetSurf = 0.085;
+      const phi = antU / 2;
+      const nx = -Math.sin(phi) * Math.cos(antU);
+      const ny = -Math.sin(phi) * Math.sin(antU);
+      const nz = Math.cos(phi);
+      antGroup.position.set(
+        R * Math.cos(antU) + offsetSurf * nx,
+        R * Math.sin(antU) + offsetSurf * ny,
+        offsetSurf * nz
+      );
+      antGroup.rotation.set(0, 0, antU + Math.PI / 2);
+
+      // Animate hinged Hilbert Hotel doors
+      for (const d of interactiveDoors) {
+        const target = d.open ? 2.15 : 0;
+        d.angle += (target - d.angle) * Math.min(1, dt * 8);
+        d.pivot.rotation.y = d.angle;
+      }
+
+      // Smooth camera transition
+      if (camAnim) {
+        camAnim.t += dt * 1.9;
+        const ease = 1 - Math.pow(1 - Math.min(camAnim.t, 1), 3);
+        camera.position.lerpVectors(camAnim.startPos, camAnim.endPos, ease);
+        controls.target.lerpVectors(camAnim.startTarget, camAnim.endTarget, ease);
+        if (camAnim.t >= 1) camAnim = null;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Hide loader once fonts & first frame are ready
+    animate();
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      loader.style.opacity = '0';
+      setTimeout(() => loader.remove(), 480);
+    }, 450);
+  </script>
+</body>
+</html>
